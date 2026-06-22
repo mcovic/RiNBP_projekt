@@ -161,6 +161,31 @@ db.players.aggregate([
   { $limit: 5 },
   { $project: { _id: 0, name: 1, club: 1, goals: "$stats.goals" } }
 ])
+
+// (alternativa) pregled kola — agregacija nad embedanim playerPoints[]
+db.rounds.aggregate([
+  { $project: {
+      _id: 0, number: 1, status: 1, deadline: 1,
+      playersScored: { $size: "$playerPoints" },
+      totalPoints: { $sum: "$playerPoints.points" }
+  }},
+  { $sort: { number: 1 } }
+])
+
+// (alternativa) top igrači po zbroju bodova kroz kola ($unwind + $group + $lookup)
+db.rounds.aggregate([
+  { $match: { status: "finished" } },
+  { $unwind: "$playerPoints" },
+  { $group: { _id: "$playerPoints.playerId",
+              roundPoints: { $sum: "$playerPoints.points" },
+              rounds: { $sum: 1 } } },
+  { $lookup: { from: "players", localField: "_id", foreignField: "_id", as: "player" } },
+  { $unwind: "$player" },
+  { $sort: { roundPoints: -1 } },
+  { $limit: 5 },
+  { $project: { _id: 0, name: "$player.name", position: "$player.position",
+                club: "$player.club", roundPoints: 1, rounds: 1 } }
+])
 ```
 
 ### 4. Transakcija — transfer igrača

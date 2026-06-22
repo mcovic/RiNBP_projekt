@@ -57,4 +57,40 @@
   </tbody>
 </table>
 
+<h2>Rounds overview</h2>
+<p class="muted">Pipeline: <code>$project ($size, $sum) → $sort</code> (over embedded <code>playerPoints[]</code>)</p>
+<table>
+  <thead><tr><th>Round</th><th>Status</th><th>Deadline</th><th>Players scored</th><th>Total points</th></tr></thead>
+  <tbody>
+    <% roundsOverview.forEach(function (r) { %>
+      <tr>
+        <td><%= r.number %></td>
+        <td><%= r.status %></td>
+        <td><%= r.deadline ? r.deadline.toISOString().slice(0, 10) : "—" %></td>
+        <td><%= r.playersScored %></td>
+        <td><%= r.totalPoints %></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+
+<h2>Top performers across rounds</h2>
+<p class="muted">Pipeline: <code>$match → $unwind → $group → $lookup → $sort → $limit → $project</code>
+  (points summed from finished rounds, not the denormalized total)</p>
+<table>
+  <thead><tr><th>#</th><th>Name</th><th>Pos</th><th>Club</th><th>Rounds</th><th>Round points</th></tr></thead>
+  <tbody>
+    <% topByRounds.forEach(function (p, i) { %>
+      <tr>
+        <td><%= i + 1 %></td>
+        <td><%= p.name %></td>
+        <td><%= p.position %></td>
+        <td><%= p.club %></td>
+        <td><%= p.rounds %></td>
+        <td><%= p.roundPoints %></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+
 <%- include("partials/footer") %>

@@ -39,12 +39,58 @@ router.get("/", async (req, res, next) => {
       { $project: { _id: 0, club: "$_id", players: 1, avgPrice: { $round: ["$avgPrice", 1] } } },
     ]).toArray();
 
+    // 4) Rounds overview: per-round count of scored players + total points.
+    const roundsOverview = await db.collection("rounds").aggregate([
+      {
+        $project: {
+          _id: 0,
+          number: 1,
+          status: 1,
+          deadline: 1,
+          playersScored: { $size: "$playerPoints" },
+          totalPoints: { $sum: "$playerPoints.points" },
+        },
+      },
+      { $sort: { number: 1 } },
+    ]).toArray();
+
+    // 5) Top performers across rounds: unwind embedded points, sum per player,
+    // then $lookup the player. Computed from actual round data (not the
+    // denormalized players.totalPoints).
+    const topByRounds = await db.collection("rounds").aggregate([
+      { $match: { status: "finished" } },
+      { $unwind: "$playerPoints" },
+      {
+        $group: {
+          _id: "$playerPoints.playerId",
+          roundPoints: { $sum: "$playerPoints.points" },
+          rounds: { $sum: 1 },
+        },
+      },
+      { $lookup: { from: "players", localField: "_id", foreignField: "_id", as: "player" } },
+      { $unwind: "$player" },
+      { $sort: { roundPoints: -1 } },
+      { $limit: 5 },
+      {
+        $project: {
+          _id: 0,
+          name: "$player.name",
+          position: "$player.position",
+          club: "$player.club",
+          roundPoints: 1,
+          rounds: 1,
+        },
+      },
+    ]).toArray();
+
     res.render("stats", {
       title: "Stats & aggregations",
       league,
       standings,
       topScorers,
       playersPerClub,
+      roundsOverview,
+      topByRounds,
     });
   } catch (err) {
     next(err);
