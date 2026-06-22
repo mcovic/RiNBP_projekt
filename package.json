@@ -1,0 +1,20 @@
+{
+  "name": "rinbp-fantasy-league",
+  "version": "1.0.0",
+  "description": "Fantasy league system demonstrating MongoDB concepts (RiNBP project)",
+  "type": "commonjs",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "seed": "node scripts/seed.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "mongodb": "^6.12.0"
+  }
+}
