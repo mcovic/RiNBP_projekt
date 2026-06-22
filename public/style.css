@@ -9,6 +9,7 @@ body {
 header {
   background: #1f2a44;
   padding: 0.75rem 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 nav a {
   color: #fff;
@@ -20,7 +21,8 @@ nav a:hover { text-decoration: underline; }
 main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
 h1 { margin-top: 0; }
 
-table { border-collapse: collapse; width: 100%; background: #fff; }
+table { border-collapse: collapse; width: 100%; background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06); }
 th, td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; text-align: left; }
 th { background: #eef1f6; }
 tr:nth-child(even) td { background: #f7f8fa; }
@@ -28,18 +30,25 @@ tr:nth-child(even) td { background: #f7f8fa; }
 .actions { display: flex; gap: 0.5rem; align-items: center; }
 .actions form { display: inline; margin: 0; }
 
-a.btn, button {
+a.btn, button, a.btn-outline {
   display: inline-block;
   padding: 0.35rem 0.7rem;
   border: 1px solid #1f2a44;
-  background: #1f2a44;
-  color: #fff;
   border-radius: 4px;
   cursor: pointer;
   text-decoration: none;
   font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1.2;
+  transition: background 0.15s ease, color 0.15s ease;
 }
+a.btn, button { background: #1f2a44; color: #fff; }
 a.btn:hover, button:hover { background: #2c3b5e; }
+
+/* Outlined (white) button — secondary actions like Edit / Open / Cancel. */
+a.btn-outline, button.btn-outline { background: #fff; color: #1f2a44; }
+a.btn-outline:hover, button.btn-outline:hover { background: #eef1f6; }
 
 .form { max-width: 420px; display: flex; flex-direction: column; gap: 0.75rem; }
 .form label { display: flex; flex-direction: column; gap: 0.25rem; font-weight: 600; }
@@ -61,6 +70,44 @@ a.btn:hover, button:hover { background: #2c3b5e; }
 .badge.ok { background: #d6f5d6; color: #1a6b1a; border: 1px solid #1a6b1a; }
 .badge.warn { background: #fff0c2; color: #8a6d00; border: 1px solid #8a6d00; }
 .explain .hint { margin-left: 0.5rem; font-size: 0.85rem; color: #555; }
+
+/* Pravi CSS tooltip (native `title` je spor/nepouzdan). Tekst u data-tip. */
+.tip { position: relative; }
+.tip::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  width: 340px;
+  max-width: 80vw;
+  white-space: normal;
+  background: #1f2a44;
+  color: #fff;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.45;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease;
+  z-index: 20;
+}
+.tip::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: calc(100% + 2px);
+  border: 6px solid transparent;
+  border-bottom-color: #1f2a44;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease;
+  z-index: 21;
+}
+.tip:hover::after, .tip:focus::after,
+.tip:hover::before, .tip:focus::before { opacity: 1; visibility: visible; }
 
 .pagination { margin-top: 1rem; display: flex; gap: 1rem; align-items: center; }
 .pagination a { font-weight: 600; }

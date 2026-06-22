@@ -1,9 +1,13 @@
 <%- include("partials/header") %>
 
-<p>MongoDB demo application for the RiNBP course (fantasy league).</p>
+<p>MongoDB demo application for the RiNBP course (fantasy league).
+Each page demonstrates one core MongoDB concept.</p>
 <ul>
   <li><a href="/players">Players</a> — CRUD over the <code>players</code> collection</li>
-  <li><a href="/teams">Fantasy teams</a> — CRUD with embedded player snapshots</li>
+  <li><a href="/players/search">Search</a> — advanced queries (<code>$in</code>, <code>$regex</code>, sort, pagination, indexes)</li>
+  <li><a href="/teams">Fantasy teams</a> — CRUD with embedded player snapshots (denormalization)</li>
+  <li><a href="/stats">Stats</a> — aggregation pipelines (standings, top scorers, per-club)</li>
+  <li><a href="/transfers">Transfers</a> — multi-document transactions (atomic player swap)</li>
 </ul>
 
 <%- include("partials/footer") %>

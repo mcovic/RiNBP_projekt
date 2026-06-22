@@ -22,9 +22,9 @@
         <td><%= p.stats.minutes %></td>
         <td><%= p.available ? "yes" : "no" %></td>
         <td class="actions">
-          <a href="/players/<%= p._id %>/edit">edit</a>
+          <a class="btn-outline" href="/players/<%= p._id %>/edit">Edit</a>
           <form method="POST" action="/players/<%= p._id %>/delete" onsubmit="return confirm('Delete this player?');">
-            <button type="submit">delete</button>
+            <button type="submit">Delete</button>
           </form>
         </td>
       </tr>

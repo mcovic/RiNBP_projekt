@@ -15,9 +15,9 @@
         <td><%= t.budget %></td>
         <td><%= t.totalPoints %></td>
         <td class="actions">
-          <a href="/teams/<%= t._id %>">open</a>
+          <a class="btn-outline" href="/teams/<%= t._id %>">Open</a>
           <form method="POST" action="/teams/<%= t._id %>/delete" onsubmit="return confirm('Delete this team?');">
-            <button type="submit">delete</button>
+            <button type="submit">Delete</button>
           </form>
         </td>
       </tr>

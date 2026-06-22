@@ -30,18 +30,18 @@
 
   <div class="form-actions">
     <button type="submit">Search</button>
-    <a href="/players/search">Reset</a>
+    <a class="btn-outline" href="/players/search">Reset</a>
   </div>
 </form>
 
 <!-- Index-usage hint with a tooltip explaining the explain() summary. -->
 <p class="explain">
   <% if (explain.usedIndex) { %>
-    <span class="badge ok" title="The query used the index '<%= explain.indexName %>'. Plan stages: <%= explain.stages %>. MongoDB scanned <%= explain.totalKeysExamined %> index keys and examined <%= explain.totalDocsExamined %> documents to return <%= explain.nReturned %>. An IXSCAN means it jumped straight to matching entries instead of reading the whole collection.">
+    <span class="badge ok tip" tabindex="0" data-tip="The query used the index '<%= explain.indexName %>'. Plan stages: <%= explain.stages %>. MongoDB scanned <%= explain.totalKeysExamined %> index keys and examined <%= explain.totalDocsExamined %> documents to return <%= explain.nReturned %>. An IXSCAN means it jumped straight to matching entries instead of reading the whole collection.">
       ✓ index used: <%= explain.indexName %>
     </span>
   <% } else { %>
-    <span class="badge warn" title="No index backed this query — a COLLSCAN read the whole collection (<%= explain.totalDocsExamined %> docs examined for <%= explain.nReturned %> returned). Regex / name-only filters can't use the {position:1, price:-1} index; add a position or price filter to see an IXSCAN.">
+    <span class="badge warn tip" tabindex="0" data-tip="No index backed this query — a COLLSCAN read the whole collection (<%= explain.totalDocsExamined %> docs examined for <%= explain.nReturned %> returned). Regex / name-only filters can't use the {position:1, price:-1} index; add a position or price filter to see an IXSCAN.">
       ⚠ collection scan (no index)
     </span>
   <% } %>
