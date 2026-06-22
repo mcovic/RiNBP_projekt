@@ -67,3 +67,6 @@ a.btn:hover, button:hover { background: #2c3b5e; }
 
 .muted { color: #666; font-size: 0.9rem; margin: 0.25rem 0 0.75rem; }
 .muted code { background: #eef1f6; padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+.flash { background: #d6f5d6; color: #1a6b1a; border: 1px solid #1a6b1a;
+  padding: 0.5rem 0.75rem; border-radius: 4px; }

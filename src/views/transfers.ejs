@@ -1,0 +1,68 @@
+<%- include("partials/header") %>
+
+<% if (message) { %><p class="flash"><%= message %></p><% } %>
+
+<p class="muted">A transfer runs as one multi-document transaction:
+  <code>$pull</code> out → <code>$push</code> in + <code>$inc spent</code> → insert <code>transfers</code> log.
+  All commit together or roll back together.</p>
+
+<form method="GET" action="/transfers" class="form">
+  <label>Team
+    <select name="teamId" onchange="this.form.submit()">
+      <option value="">— choose a team —</option>
+      <% teams.forEach(function (t) { %>
+        <option value="<%= t._id %>" <%= team && team._id.equals(t._id) ? "selected" : "" %>><%= t.name %></option>
+      <% }); %>
+    </select>
+  </label>
+</form>
+
+<% if (team) { %>
+  <h2><%= team.name %> — spent <%= Math.round(team.spent * 10) / 10 %> / <%= team.budget %> M</h2>
+  <% if (team.players.length === 0) { %>
+    <p>This team has no players to transfer out.</p>
+  <% } else { %>
+    <form method="POST" action="/transfers" class="form">
+      <input type="hidden" name="teamId" value="<%= team._id %>" />
+      <label>Player out (from squad)
+        <select name="outPlayerId" required>
+          <% team.players.forEach(function (p) { %>
+            <option value="<%= p.playerId %>"><%= p.position %> — <%= p.name %> (<%= p.buyPrice %>M)</option>
+          <% }); %>
+        </select>
+      </label>
+      <label>Player in (available)
+        <select name="inPlayerId" required>
+          <% candidates.forEach(function (c) { %>
+            <option value="<%= c._id %>"><%= c.position %> — <%= c.name %> (<%= c.price %>M)</option>
+          <% }); %>
+        </select>
+      </label>
+      <div class="form-actions">
+        <button type="submit">Execute transfer</button>
+      </div>
+    </form>
+  <% } %>
+<% } %>
+
+<h2>Transfer history</h2>
+<% if (history.length === 0) { %>
+  <p>No transfers yet.</p>
+<% } else { %>
+  <table>
+    <thead><tr><th>When</th><th>Team</th><th>Out</th><th>In</th><th>Δ price</th></tr></thead>
+    <tbody>
+      <% history.forEach(function (h) { %>
+        <tr>
+          <td><%= h.createdAt.toISOString().slice(0, 16).replace("T", " ") %></td>
+          <td><%= h.team %></td>
+          <td><%= h.playerOut.name %> (<%= h.playerOut.price %>M)</td>
+          <td><%= h.playerIn.name %> (<%= h.playerIn.price %>M)</td>
+          <td><%= Math.round((h.playerIn.price - h.playerOut.price) * 10) / 10 %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } %>
+
+<%- include("partials/footer") %>

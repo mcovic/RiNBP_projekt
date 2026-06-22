@@ -177,8 +177,27 @@ try {
   })
 } finally { await session.endSession() }
 ```
-> **Replica set obavezan.** Atlas radi odmah. Lokalno: pokreni mongod kao jednočvorni
-> replica set (`mongod --replSet rs0` + `rs.initiate()`) ili koristi Atlas samo za ovaj demo.
+> **Replica set obavezan.** Multi-document transakcije ne rade na samostalnom (standalone)
+> mongod-u. Atlas je već replica set i radi odmah.
+
+#### Odabrani pristup (lokalni razvoj) — jednočvorni replica set `rs0`
+
+Za razvoj i test Faze 5 lokalni Homebrew mongod je prebačen u **jednočvorni replica set**:
+
+1. U `/opt/homebrew/etc/mongod.conf` dodano:
+   ```yaml
+   replication:
+     replSetName: rs0
+   ```
+2. Restart servisa: `brew services restart mongodb-community`
+3. Inicijalizacija (eksplicitni host da `replicaSet=rs0` URI radi):
+   ```js
+   rs.initiate({ _id: "rs0", members: [{ _id: 0, host: "127.0.0.1:27017" }] })
+   ```
+4. Connection string u `.env`: `mongodb://127.0.0.1:27017/?replicaSet=rs0`
+
+Postojeći podaci ostaju netaknuti (konverzija ne briše bazu). Za seminar/cloud demo
+(Faza 6) isti kod radi i na Atlasu — samo se promijeni `MONGODB_URI`.
 
 ### 5. Denormalizacija / embedding
 `fantasyTeams.players[]` čuva snapshot igrača (ime, pozicija, cijena) → prikaz momčadi

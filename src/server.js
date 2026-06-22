@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 app.use("/players", require("./routes/players"));
 app.use("/teams", require("./routes/teams"));
 app.use("/stats", require("./routes/stats"));
-// More routes (leagues, transfers) are mounted in later phases.
+app.use("/transfers", require("./routes/transfers"));
 
 // Basic error handler so route failures return a readable 500.
 app.use((err, req, res, next) => {
