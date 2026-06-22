@@ -1,0 +1,28 @@
+# Ovisnosti
+node_modules/
+
+# Okruženje / tajne
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logovi
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Privremeno / build
+dist/
+build/
+tmp/
+*.tmp
