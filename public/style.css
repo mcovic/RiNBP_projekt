@@ -64,3 +64,6 @@ a.btn:hover, button:hover { background: #2c3b5e; }
 
 .pagination { margin-top: 1rem; display: flex; gap: 1rem; align-items: center; }
 .pagination a { font-weight: 600; }
+
+.muted { color: #666; font-size: 0.9rem; margin: 0.25rem 0 0.75rem; }
+.muted code { background: #eef1f6; padding: 0.1rem 0.3rem; border-radius: 3px; }

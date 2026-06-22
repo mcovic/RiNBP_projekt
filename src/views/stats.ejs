@@ -1,0 +1,60 @@
+<%- include("partials/header") %>
+
+<h2>League standings
+  <% if (league) { %><small>— <%= league.name %> (<%= league.code %>)</small><% } %>
+</h2>
+<p class="muted">Pipeline: <code>$match → $lookup → $unwind → $sort → $project</code></p>
+<% if (!league) { %>
+  <p>No league found. Run <code>npm run seed</code> first.</p>
+<% } else if (standings.length === 0) { %>
+  <p>No teams in this league yet.</p>
+<% } else { %>
+  <table>
+    <thead><tr><th>#</th><th>Team</th><th>Manager</th><th>Spent</th><th>Points</th></tr></thead>
+    <tbody>
+      <% standings.forEach(function (s, i) { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= s.team %></td>
+          <td><%= s.manager %></td>
+          <td><%= Math.round(s.spent * 10) / 10 %></td>
+          <td><%= s.totalPoints %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } %>
+
+<h2>Top 5 scorers</h2>
+<p class="muted">Pipeline: <code>$match → $sort → $limit → $project</code></p>
+<table>
+  <thead><tr><th>#</th><th>Name</th><th>Pos</th><th>Club</th><th>Goals</th></tr></thead>
+  <tbody>
+    <% topScorers.forEach(function (p, i) { %>
+      <tr>
+        <td><%= i + 1 %></td>
+        <td><%= p.name %></td>
+        <td><%= p.position %></td>
+        <td><%= p.club %></td>
+        <td><%= p.goals %></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+
+<h2>Players per club</h2>
+<p class="muted">Pipeline: <code>$group → $sort → $project</code> (count + average price)</p>
+<table>
+  <thead><tr><th>Club</th><th>Players</th><th>Avg price (M)</th></tr></thead>
+  <tbody>
+    <% playersPerClub.forEach(function (c) { %>
+      <tr>
+        <td><%= c.club %></td>
+        <td><%= c.players %></td>
+        <td><%= c.avgPrice %></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+
+<%- include("partials/footer") %>

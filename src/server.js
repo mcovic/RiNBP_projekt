@@ -27,7 +27,8 @@ app.get("/", (req, res) => {
 // Domain routes.
 app.use("/players", require("./routes/players"));
 app.use("/teams", require("./routes/teams"));
-// More routes (leagues, transfers, stats) are mounted in later phases.
+app.use("/stats", require("./routes/stats"));
+// More routes (leagues, transfers) are mounted in later phases.
 
 // Basic error handler so route failures return a readable 500.
 app.use((err, req, res, next) => {
