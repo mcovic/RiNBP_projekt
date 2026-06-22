@@ -28,3 +28,6 @@ tmp/
 *.tmp
 
 /package-lock.json
+
+# Osobne biljeske (nisu dio predaje)
+docs/PREGLED.md
