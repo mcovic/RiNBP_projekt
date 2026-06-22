@@ -1,0 +1,48 @@
+<%- include("../partials/header") %>
+
+<p>
+  <a href="/teams">&larr; All teams</a> |
+  Spent <strong><%= Math.round(team.spent * 10) / 10 %></strong> / <%= team.budget %> M |
+  Points <strong><%= team.totalPoints %></strong>
+</p>
+
+<h2>Squad (<%= team.players.length %>)</h2>
+<% if (team.players.length === 0) { %>
+  <p>No players yet. Add some below.</p>
+<% } else { %>
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Pos</th><th>Buy price</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% team.players.forEach(function (p) { %>
+        <tr>
+          <td><%= p.name %></td>
+          <td><%= p.position %></td>
+          <td><%= p.buyPrice %></td>
+          <td class="actions">
+            <form method="POST" action="/teams/<%= team._id %>/players/<%= p.playerId %>/delete">
+              <button type="submit">remove</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } %>
+
+<h2>Add player</h2>
+<form method="POST" action="/teams/<%= team._id %>/players" class="form">
+  <label>Available player
+    <select name="playerId" required>
+      <% candidates.forEach(function (c) { %>
+        <option value="<%= c._id %>"><%= c.position %> — <%= c.name %> (<%= c.price %>M)</option>
+      <% }); %>
+    </select>
+  </label>
+  <div class="form-actions">
+    <button type="submit">Add to squad</button>
+  </div>
+</form>
+
+<%- include("../partials/footer") %>

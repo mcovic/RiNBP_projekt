@@ -1,0 +1,58 @@
+<%- include("../partials/header") %>
+
+<%
+  // Reused for both create and edit. `player` is null when creating.
+  const action = player ? `/players/${player._id}` : "/players";
+  const p = player || { stats: {} };
+%>
+
+<form method="POST" action="<%= action %>" class="form">
+  <label>Name
+    <input type="text" name="name" value="<%= p.name || '' %>" required />
+  </label>
+
+  <label>Position
+    <select name="position">
+      <% positions.forEach(function (pos) { %>
+        <option value="<%= pos %>" <%= p.position === pos ? "selected" : "" %>><%= pos %></option>
+      <% }); %>
+    </select>
+  </label>
+
+  <label>Club
+    <input type="text" name="club" value="<%= p.club || '' %>" />
+  </label>
+
+  <label>Price (M)
+    <input type="number" step="0.1" name="price" value="<%= p.price != null ? p.price : '' %>" />
+  </label>
+
+  <label>Total points
+    <input type="number" name="totalPoints" value="<%= p.totalPoints != null ? p.totalPoints : 0 %>" />
+  </label>
+
+  <fieldset>
+    <legend>Stats</legend>
+    <label>Goals
+      <input type="number" name="goals" value="<%= p.stats.goals != null ? p.stats.goals : 0 %>" />
+    </label>
+    <label>Assists
+      <input type="number" name="assists" value="<%= p.stats.assists != null ? p.stats.assists : 0 %>" />
+    </label>
+    <label>Minutes
+      <input type="number" name="minutes" value="<%= p.stats.minutes != null ? p.stats.minutes : 0 %>" />
+    </label>
+  </fieldset>
+
+  <label class="inline">
+    <input type="checkbox" name="available" <%= (!player || p.available) ? "checked" : "" %> />
+    Available
+  </label>
+
+  <div class="form-actions">
+    <button type="submit"><%= player ? "Save changes" : "Create player" %></button>
+    <a href="/players">Cancel</a>
+  </div>
+</form>
+
+<%- include("../partials/footer") %>

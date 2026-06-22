@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %></title>
-</head>
-<body>
-  <h1><%= title %></h1>
-  <p>MongoDB demo application. Routes are added phase by phase.</p>
-</body>
-</html>
+<%- include("partials/header") %>
+
+<p>MongoDB demo application for the RiNBP course (fantasy league).</p>
+<ul>
+  <li><a href="/players">Players</a> — CRUD over the <code>players</code> collection</li>
+  <li><a href="/teams">Fantasy teams</a> — CRUD with embedded player snapshots</li>
+</ul>
+
+<%- include("partials/footer") %>

@@ -1,0 +1,28 @@
+<%- include("../partials/header") %>
+
+<p><a class="btn" href="/teams/new">+ New team</a></p>
+
+<table>
+  <thead>
+    <tr><th>Name</th><th>Players</th><th>Spent</th><th>Budget</th><th>Points</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    <% teams.forEach(function (t) { %>
+      <tr>
+        <td><a href="/teams/<%= t._id %>"><%= t.name %></a></td>
+        <td><%= t.players.length %></td>
+        <td><%= Math.round(t.spent * 10) / 10 %></td>
+        <td><%= t.budget %></td>
+        <td><%= t.totalPoints %></td>
+        <td class="actions">
+          <a href="/teams/<%= t._id %>">open</a>
+          <form method="POST" action="/teams/<%= t._id %>/delete" onsubmit="return confirm('Delete this team?');">
+            <button type="submit">delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+
+<%- include("../partials/footer") %>

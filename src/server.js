@@ -13,16 +13,27 @@ const PORT = process.env.PORT || 3000;
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Body parsing for HTML form submissions (used by CRUD routes later).
+// Body parsing for HTML form submissions (used by CRUD routes).
 app.use(express.urlencoded({ extended: true }));
+
+// Static assets (CSS).
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 // Landing page.
 app.get("/", (req, res) => {
   res.render("index", { title: "Fantasy League (RiNBP)" });
 });
 
-// Routes per domain are mounted here (players, teams, leagues, transfers, stats).
-// Added in later phases.
+// Domain routes.
+app.use("/players", require("./routes/players"));
+app.use("/teams", require("./routes/teams"));
+// More routes (leagues, transfers, stats) are mounted in later phases.
+
+// Basic error handler so route failures return a readable 500.
+app.use((err, req, res, next) => {
+  console.error("[error]", err);
+  res.status(500).send("Internal error: " + err.message);
+});
 
 // Start: connect to MongoDB first, then listen.
 async function start() {

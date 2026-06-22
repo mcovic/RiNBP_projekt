@@ -1,0 +1,34 @@
+<%- include("../partials/header") %>
+
+<form method="POST" action="/teams" class="form">
+  <label>Team name
+    <input type="text" name="name" required />
+  </label>
+
+  <label>Manager (user)
+    <select name="userId" required>
+      <% users.forEach(function (u) { %>
+        <option value="<%= u._id %>"><%= u.username %></option>
+      <% }); %>
+    </select>
+  </label>
+
+  <label>League
+    <select name="leagueId" required>
+      <% leagues.forEach(function (l) { %>
+        <option value="<%= l._id %>"><%= l.name %></option>
+      <% }); %>
+    </select>
+  </label>
+
+  <label>Budget (M)
+    <input type="number" step="0.1" name="budget" value="100" />
+  </label>
+
+  <div class="form-actions">
+    <button type="submit">Create team</button>
+    <a href="/teams">Cancel</a>
+  </div>
+</form>
+
+<%- include("../partials/footer") %>

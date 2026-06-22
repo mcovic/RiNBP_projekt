@@ -1,0 +1,49 @@
+/* Minimal styling for readability — intentionally small (thin UI layer). */
+* { box-sizing: border-box; }
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  color: #1c1c1c;
+  background: #fafafa;
+}
+header {
+  background: #1f2a44;
+  padding: 0.75rem 1.5rem;
+}
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-right: 1.25rem;
+  font-weight: 600;
+}
+nav a:hover { text-decoration: underline; }
+main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+h1 { margin-top: 0; }
+
+table { border-collapse: collapse; width: 100%; background: #fff; }
+th, td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; text-align: left; }
+th { background: #eef1f6; }
+tr:nth-child(even) td { background: #f7f8fa; }
+
+.actions { display: flex; gap: 0.5rem; align-items: center; }
+.actions form { display: inline; margin: 0; }
+
+a.btn, button {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid #1f2a44;
+  background: #1f2a44;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+a.btn:hover, button:hover { background: #2c3b5e; }
+
+.form { max-width: 420px; display: flex; flex-direction: column; gap: 0.75rem; }
+.form label { display: flex; flex-direction: column; gap: 0.25rem; font-weight: 600; }
+.form label.inline { flex-direction: row; align-items: center; gap: 0.5rem; }
+.form input, .form select { padding: 0.4rem; font-size: 1rem; }
+.form fieldset { display: flex; gap: 0.75rem; }
+.form-actions { display: flex; gap: 1rem; align-items: center; }

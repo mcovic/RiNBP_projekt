@@ -1,0 +1,36 @@
+<%- include("../partials/header") %>
+
+<p><a class="btn" href="/players/new">+ New player</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th><th>Pos</th><th>Club</th><th>Price</th>
+      <th>Points</th><th>G</th><th>A</th><th>Min</th><th>Avail</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% players.forEach(function (p) { %>
+      <tr>
+        <td><%= p.name %></td>
+        <td><%= p.position %></td>
+        <td><%= p.club %></td>
+        <td><%= p.price %></td>
+        <td><%= p.totalPoints %></td>
+        <td><%= p.stats.goals %></td>
+        <td><%= p.stats.assists %></td>
+        <td><%= p.stats.minutes %></td>
+        <td><%= p.available ? "yes" : "no" %></td>
+        <td class="actions">
+          <a href="/players/<%= p._id %>/edit">edit</a>
+          <form method="POST" action="/players/<%= p._id %>/delete" onsubmit="return confirm('Delete this player?');">
+            <button type="submit">delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+<p><%= players.length %> players.</p>
+
+<%- include("../partials/footer") %>
