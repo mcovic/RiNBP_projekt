@@ -4,9 +4,6 @@ Studentski projekt za kolegij **Raspodijeljene i nerelacijske baze podataka (RiN
 Demonstrira ključne **MongoDB** koncepte na primjeru sustava za fantasy ligu.
 Web aplikacija je tanak sloj nad bazom — forme za operacije i tablice/JSON za prikaz.
 
-> Detalji opsega i pravila: `CLAUDE.md`. Plan po fazama: `docs/PLAN.md`.
-> Podatkovni model, indeksi i sirovi upiti: `docs/DATA_MODEL.md`.
-
 ## Tehnologija
 
 - **Baza:** MongoDB (lokalno za razvoj, MongoDB Atlas za cloud demo)
@@ -37,7 +34,7 @@ cp .env.example .env   # po potrebi prilagodi MONGODB_URI
 
 ## Pokretanje (lokalni razvoj)
 
-Transakcije (Faza 5) zahtijevaju **replica set** — samostalni mongod ih ne podržava.
+Transakcije zahtijevaju **replica set** — samostalni mongod ih ne podržava.
 Lokalni mongod je zato pokrenut kao **jednočvorni replica set `rs0`** (postupak je
 dokumentiran u `docs/DATA_MODEL.md`). Ukratko:
 
@@ -90,7 +87,6 @@ src/
 scripts/
   seed.js            # demo podaci + indeksi
 docs/
-  PLAN.md            # plan po fazama
   DATA_MODEL.md      # kolekcije, sheme, indeksi, primjeri upita
 ```
 
