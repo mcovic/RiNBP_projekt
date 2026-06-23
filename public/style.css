@@ -1,4 +1,3 @@
-/* Minimal styling for readability — intentionally small (thin UI layer). */
 * { box-sizing: border-box; }
 body {
   font-family: system-ui, sans-serif;
@@ -46,7 +45,6 @@ a.btn, button, a.btn-outline {
 a.btn, button { background: #1f2a44; color: #fff; }
 a.btn:hover, button:hover { background: #2c3b5e; }
 
-/* Outlined (white) button — secondary actions like Edit / Open / Cancel. */
 a.btn-outline, button.btn-outline { background: #fff; color: #1f2a44; }
 a.btn-outline:hover, button.btn-outline:hover { background: #eef1f6; }
 
@@ -57,7 +55,6 @@ a.btn-outline:hover, button.btn-outline:hover { background: #eef1f6; }
 .form fieldset { display: flex; gap: 0.75rem; }
 .form-actions { display: flex; gap: 1rem; align-items: center; }
 
-/* Search page */
 .search-form { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1rem; }
 .search-form fieldset { display: flex; gap: 0.75rem; align-items: center; }
 .search-form label { display: flex; flex-direction: column; gap: 0.25rem; font-weight: 600; }
@@ -71,7 +68,6 @@ a.btn-outline:hover, button.btn-outline:hover { background: #eef1f6; }
 .badge.warn { background: #fff0c2; color: #8a6d00; border: 1px solid #8a6d00; }
 .explain .hint { margin-left: 0.5rem; font-size: 0.85rem; color: #555; }
 
-/* Pravi CSS tooltip (native `title` je spor/nepouzdan). Tekst u data-tip. */
 .tip { position: relative; }
 .tip::after {
   content: attr(data-tip);

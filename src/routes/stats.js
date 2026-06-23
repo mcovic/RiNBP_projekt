@@ -1,5 +1,3 @@
-// Aggregation routes: league standings and top scorers.
-// Demonstrates $match, $lookup, $unwind, $group, $sort, $limit, $project.
 const express = require("express");
 const { getDb } = require("../db");
 
@@ -9,7 +7,6 @@ router.get("/", async (req, res, next) => {
   try {
     const db = getDb();
 
-    // Use the (single) seeded league for the standings demo.
     const league = await db.collection("leagues").findOne({});
 
     // 1) League standings: join teams → users, sort by points, project a clean row.

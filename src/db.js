@@ -1,6 +1,3 @@
-// MongoDB connection as a singleton.
-// Per project convention, all database access goes through this module so the
-// app reuses a single MongoClient / Db instance instead of reconnecting.
 require("dotenv").config();
 const { MongoClient } = require("mongodb");
 
@@ -11,7 +8,6 @@ const client = new MongoClient(uri);
 
 let db = null;
 
-// Open the connection once and cache the Db handle.
 async function connect() {
   if (db) return db;
   await client.connect();
@@ -20,7 +16,6 @@ async function connect() {
   return db;
 }
 
-// Return the already-connected Db; throws if connect() has not run yet.
 function getDb() {
   if (!db) {
     throw new Error("Database not initialized. Call connect() first.");
@@ -28,5 +23,4 @@ function getDb() {
   return db;
 }
 
-// Expose the client too (needed for sessions/transactions later).
 module.exports = { connect, getDb, client };

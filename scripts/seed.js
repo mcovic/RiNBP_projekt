@@ -1,16 +1,14 @@
 // Seed script: fills `fantasy_league` with demo data and creates indexes.
-// Idempotent: drops the relevant collections first, then repopulates, so it can
-// be re-run safely (handy for demos/screenshots).
+// Idempotent: drops the relevant collections first, then repopulates, so
+// it can be re-run safely.
 require("dotenv").config();
 const { connect, getDb, client } = require("../src/db");
 
-// Deterministic pseudo-random generator (LCG) so re-runs produce identical data.
 let seedState = 123456789;
 function rand() {
   seedState = (seedState * 1103515245 + 12345) & 0x7fffffff;
   return seedState / 0x7fffffff;
 }
-// Integer in [min, max].
 function randInt(min, max) {
   return min + Math.floor(rand() * (max - min + 1));
 }
@@ -31,11 +29,8 @@ const LAST = [
   "Vuković", "Perić", "Šimić", "Galić", "Pavić", "Brkić", "Lovrić",
 ];
 
-// Squad shape: how many players to create per position (total = 50).
 const POSITION_PLAN = { GK: 6, DEF: 16, MID: 16, FWD: 12 };
 
-// Build a player document. Stats/points scale with position so that
-// aggregations (top scorers, standings) produce meaningful results.
 function makePlayer(position) {
   const goals =
     position === "FWD" ? randInt(2, 18)
@@ -44,9 +39,7 @@ function makePlayer(position) {
     : 0; // GK
   const assists = position === "GK" ? randInt(0, 1) : randInt(0, 9);
   const minutes = randInt(450, 2700);
-  // Points roughly derived from contributions + appearances.
   const totalPoints = goals * 5 + assists * 3 + Math.round(minutes / 90) * 2;
-  // Price scales with attacking output, kept within ~4.0–12.5M.
   const price = Math.min(12.5, 4 + goals * 0.4 + assists * 0.2 + rand() * 1.5);
 
   return {
@@ -64,12 +57,10 @@ async function seed() {
   await connect();
   const db = getDb();
 
-  // 1) Clean slate (idempotent re-run).
   const collections = ["players", "users", "fantasyTeams", "leagues", "rounds", "transfers"];
   for (const name of collections) {
     await db.collection(name).deleteMany({});
   }
-  // Drop indexes too so createIndex definitions are re-applied cleanly.
   for (const name of collections) {
     try {
       await db.collection(name).dropIndexes();
@@ -78,7 +69,6 @@ async function seed() {
     }
   }
 
-  // 2) Users (managers).
   const now = new Date();
   const userDocs = [
     { username: "ivan_h", email: "ivan@example.com", createdAt: now },
@@ -88,7 +78,6 @@ async function seed() {
   const usersRes = await db.collection("users").insertMany(userDocs);
   const userIds = Object.values(usersRes.insertedIds);
 
-  // 3) League (members reference users).
   const leagueDoc = {
     name: "Liga prijatelja",
     code: "RIJ2026",
@@ -99,7 +88,6 @@ async function seed() {
   const leagueRes = await db.collection("leagues").insertOne(leagueDoc);
   const leagueId = leagueRes.insertedId;
 
-  // 4) Players (~50, spread across positions).
   const playerDocs = [];
   for (const [position, count] of Object.entries(POSITION_PLAN)) {
     for (let i = 0; i < count; i++) {
@@ -107,16 +95,11 @@ async function seed() {
     }
   }
   const playersRes = await db.collection("players").insertMany(playerDocs);
-  // Re-read inserted players with their _id for snapshots / round points.
   const players = await db.collection("players").find({}).toArray();
 
-  // Group players by position to pick valid squads.
   const byPos = { GK: [], DEF: [], MID: [], FWD: [] };
   for (const p of players) byPos[p.position].push(p);
 
-  // 5) Fantasy teams for the first two users (embedding demo).
-  // Snapshot = { playerId, name, position, buyPrice } stored inside the team so
-  // displaying the squad needs no $lookup. Trade-off documented in DATA_MODEL.md.
   function buildSquad(slice) {
     const chosen = [
       ...slice(byPos.GK, 1),
@@ -160,9 +143,7 @@ async function seed() {
   ];
   await db.collection("fantasyTeams").insertMany(teamDocs);
 
-  // 6) Rounds (gameweeks) with embedded per-player points.
   function pointsForRound(pl) {
-    // Small per-round score correlated with season output.
     const base = pl.position === "FWD" ? 3 : pl.position === "MID" ? 2 : 1;
     return base + randInt(0, 8);
   }
@@ -188,16 +169,12 @@ async function seed() {
   ];
   await db.collection("rounds").insertMany(roundDocs);
 
-  // 7) transfers: empty log — filled by the transaction demo in Phase 5.
-
-  // 8) Indexes (see DATA_MODEL.md).
   await db.collection("players").createIndex({ position: 1, price: -1 });
   await db.collection("players").createIndex({ name: "text" });
   await db.collection("leagues").createIndex({ code: 1 }, { unique: true });
   await db.collection("fantasyTeams").createIndex({ leagueId: 1, totalPoints: -1 });
   await db.collection("users").createIndex({ email: 1 }, { unique: true });
 
-  // 9) Report.
   console.log("[seed] Done. Document counts:");
   for (const name of collections) {
     const count = await db.collection(name).countDocuments();

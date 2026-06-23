@@ -1,5 +1,3 @@
-// CRUD routes for the `players` collection.
-// Demonstrates create / read / update / delete with the native MongoDB driver.
 const express = require("express");
 const { ObjectId } = require("mongodb");
 const { getDb } = require("../db");
@@ -7,7 +5,6 @@ const { getDb } = require("../db");
 const router = express.Router();
 const POSITIONS = ["GK", "DEF", "MID", "FWD"];
 
-// Parse the player form body into a typed document.
 function parsePlayerBody(body) {
   return {
     name: (body.name || "").trim(),
@@ -68,7 +65,6 @@ router.get("/search", async (req, res, next) => {
   try {
     const coll = getDb().collection("players");
 
-    // Normalize selected positions (checkboxes → array).
     let positions = req.query.position || [];
     if (!Array.isArray(positions)) positions = [positions];
     positions = positions.filter((p) => POSITIONS.includes(p));
@@ -76,23 +72,19 @@ router.get("/search", async (req, res, next) => {
     const maxPrice = parseFloat(req.query.maxPrice);
     const name = (req.query.name || "").trim();
 
-    // Build the filter conditionally.
     const filter = {};
     if (positions.length) filter.position = { $in: positions }; // $in
     if (!Number.isNaN(maxPrice)) filter.price = { $lt: maxPrice }; // $lt
     if (name) filter.name = { $regex: name, $options: "i" }; // $regex
 
-    // Sort (defaults to most points first).
     const sortField = ["price", "totalPoints", "name"].includes(req.query.sort)
       ? req.query.sort
       : "totalPoints";
     const sortSpec = { [sortField]: sortField === "name" ? 1 : -1 };
 
-    // Pagination.
     const page = Math.max(1, parseInt(req.query.page, 10) || 1);
     const skip = (page - 1) * PAGE_SIZE;
 
-    // Projection: only the fields the table needs.
     const projection = { _id: 0, name: 1, position: 1, club: 1, price: 1, totalPoints: 1 };
 
     const [results, total, explain] = await Promise.all([
@@ -103,7 +95,6 @@ router.get("/search", async (req, res, next) => {
 
     const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-    // Query string (without `page`) to keep filters across pagination links.
     const qs = new URLSearchParams();
     positions.forEach((p) => qs.append("position", p));
     if (!Number.isNaN(maxPrice)) qs.set("maxPrice", req.query.maxPrice);

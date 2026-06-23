@@ -1,6 +1,3 @@
-// Express application entry point.
-// Thin web layer over MongoDB: connects to the database, then starts the HTTP
-// server. Domain routes are mounted here as they are added in later phases.
 require("dotenv").config();
 const path = require("path");
 const express = require("express");
@@ -13,18 +10,15 @@ const PORT = process.env.PORT || 3000;
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Body parsing for HTML form submissions (used by CRUD routes).
 app.use(express.urlencoded({ extended: true }));
 
 // Static assets (CSS).
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-// Landing page.
 app.get("/", (req, res) => {
   res.render("index", { title: "Fantasy League (RiNBP)" });
 });
 
-// Domain routes.
 app.use("/players", require("./routes/players"));
 app.use("/teams", require("./routes/teams"));
 app.use("/stats", require("./routes/stats"));

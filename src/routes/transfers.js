@@ -1,5 +1,3 @@
-// Transfer route: swaps one player out and another in for a fantasy team as a
-// single multi-document transaction (requires a replica set — see DATA_MODEL.md).
 const express = require("express");
 const { ObjectId } = require("mongodb");
 const { getDb, client } = require("../db");
@@ -72,7 +70,6 @@ router.post("/", async (req, res, next) => {
 
   const session = client.startSession();
   try {
-    // withTransaction commits on success and aborts (rolls back) on throw.
     await session.withTransaction(async () => {
       const teams = db.collection("fantasyTeams");
       const transfers = db.collection("transfers");
@@ -98,7 +95,7 @@ router.post("/", async (req, res, next) => {
     });
     res.redirect(`/transfers?teamId=${req.body.teamId}&msg=Transfer+completed`);
   } catch (err) {
-    next(err); // transaction already rolled back
+    next(err);
   } finally {
     await session.endSession();
   }

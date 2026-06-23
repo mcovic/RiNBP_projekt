@@ -1,6 +1,3 @@
-// CRUD routes for the `fantasyTeams` collection.
-// Shows working with embedded player snapshots (denormalization): adding/removing
-// a player mutates the embedded `players[]` array and the denormalized `spent`.
 const express = require("express");
 const { ObjectId } = require("mongodb");
 const { getDb } = require("../db");
